@@ -4,6 +4,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {JejuData, JejuItem} from "../../commons/commonsData";
 import apiClient from "../../http-commons";
 import {AxiosResponse, AxiosError} from "axios";
+import  MapPrint from "../../commons/MapPrint";
 /*
     1. React = tanstack-query
     2. TypeScript => interface / 데이터형
@@ -97,8 +98,8 @@ function JejuAttractionDetail() {
                             <tr>
                                 <td className={"text-center"} width={"15%"}>안내</td>
                                 {
-                                    jejuData?.infocenter &&
-                                    <td width={"55%"} dangerouslySetInnerHTML={{__html: jejuData?.infocenter}}></td>
+                                    /* HTML로 파싱 : dangerouslySetInnerHTML */
+                                    jejuData?.infocenter && <td width={"55%"} dangerouslySetInnerHTML={{__html: jejuData?.infocenter}}></td>
                                 }
                             </tr>
                             </tbody>
@@ -114,7 +115,11 @@ function JejuAttractionDetail() {
                         <table className="table">
                             <tbody>
                             <tr>
-                                <td className={"text-center"}></td>
+                                <td className={"text-center"}>
+                                    {
+                                        jejuData && <MapPrint address={jejuData?.address} name={jejuData?.title}/>
+                                    }
+                                </td>
                             </tr>
                             </tbody>
                         </table>

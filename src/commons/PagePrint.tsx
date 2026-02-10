@@ -29,10 +29,7 @@ const PagePrint: FC<pagePrintProps> = ({data, setCurpage}) => {
     }
     return (
         <ul className={"pagination"}>
-
-            <ul className="pagination">
-                {pageArr}
-            </ul>
+            {pageArr}
         </ul>
     )
 }
