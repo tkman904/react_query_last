@@ -200,7 +200,7 @@ function Header() {
                                             login && <li className="nav-item"><a className="nav-link" href="#">챗봇</a></li>
                                         }
                                         <li className="nav-item"><a className="nav-link" href="archive.html">동영상검색</a></li>
-                                        <li className="nav-item"><a className="nav-link" href="#">커뮤니티</a></li>
+                                        <li className="nav-item"><Link className="nav-link" to={"/board/list"}>커뮤니티</Link></li>
                                     </ul>
                                 </div>
                             </nav>

@@ -4,6 +4,9 @@ import Footer from "./components/layout/Footer";
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import JejuAttractionList from "./components/jeju/JejuAttractionList";
 import JejuAttractionDetail from "./components/jeju/JejuAttractionDetail";
+import BoardList from "./components/board/BoardList";
+import BoardInsert from "./components/board/BoardInsert";
+import BoardDetail from "./components/board/BoardDetail";
 
 function App() {
     return (
@@ -13,6 +16,9 @@ function App() {
                 <Route path="/" element={<Home/>}/>
                 <Route path="/jeju/attraction" element={<JejuAttractionList/>}/>
                 <Route path="/jeju/detail/:contentid" element={<JejuAttractionDetail/>}/>
+                <Route path="/board/list" element={<BoardList/>}/>
+                <Route path="/board/insert" element={<BoardInsert/>}/>
+                <Route path="/board/detail/:no" element={<BoardDetail/>}/>
             </Routes>
             <Footer/>
         </Router>
