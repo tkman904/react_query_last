@@ -83,7 +83,7 @@ function BoardInsert() {
             </div>
             <section className="archive-area section_padding_80">
                 <div className="container">
-                    <div className="row">
+                    <div className="row" style={{"width": "600px", "margin": "0px auto"}}>
                         <table className="table">
                             <tbody>
                             <tr>

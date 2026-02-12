@@ -55,3 +55,22 @@ export interface JejuData {
     startPage: number;
     endPage: number;
 }
+
+export interface YoutubeItem {
+    id: {
+        videoId: string;
+    };
+    snippet: {
+        title: string;
+        description: string;
+        thumbnail: {
+            medium: {
+                url: string;
+            };
+        };
+    };
+}
+
+export interface YoutubeResponse {
+    items: YoutubeItem[];
+}

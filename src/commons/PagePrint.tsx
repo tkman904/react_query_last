@@ -17,15 +17,15 @@ const PagePrint: FC<pagePrintProps> = ({data, setCurpage}) => {
     const pageChange = (page: number) => setCurpage(page)
 
     if (startPage > 1) {
-        pageArr.push(<li className="page-item"><a className="page-link nav-link" onClick={prev}>&laquo;</a></li>)
+        pageArr.push(<li className="page-item" key="prev"><a className="page-link nav-link" onClick={prev}>&laquo;</a></li>)
     }
 
     for (let i: number = startPage; i <= endPage; i++) {
-        pageArr.push(<li className={i === curpage ? 'page-item active' : 'page-item'}><a className="page-link nav-link" onClick={() => pageChange(i)}>{i}</a></li>)
+        pageArr.push(<li className={i === curpage ? 'page-item active' : 'page-item'} key={`page-${i}`}><a className="page-link nav-link" onClick={() => pageChange(i)}>{i}</a></li>)
     }
 
     if (endPage < totalpage) {
-        pageArr.push(<li className="page-item"><a className="page-link nav-link" onClick={next}>&raquo;</a></li>)
+        pageArr.push(<li className="page-item" key="next"><a className="page-link nav-link" onClick={next}>&raquo;</a></li>)
     }
     return (
         <ul className={"pagination"}>
