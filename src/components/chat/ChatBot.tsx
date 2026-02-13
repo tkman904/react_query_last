@@ -6,24 +6,53 @@ interface Message {
 }
 
 function ChatBot() {
-    // 자체 메시지 목록
+    // 전체 메시지 목록
     const [message, setMessage] = useState<Message[]>([])
+
+    // 입력값
     const [input, setInput] = useState("")
 
-    // AI 메시지를 직접 생성 = HTML에 적용
+    // 마지막 AI 메시지를 직접 조작
     const streamingRef = useRef<HTMLDivElement | null>(null)
 
-    // AI가 보내준 데이터를 다 읽었는지 확인
+    // 스트리밍 상ㅌ
     const isStreaming = useRef(false)
+
+    // 타이핑 효과
+    const typingQueue = useRef<string[]>([]);
+    const typingTimer = useRef<number | null>(null);
+
+    // 타이핑 시작
+    const startTyping = () => {
+        if (typingTimer.current !== null) return
+
+        typingTimer.current = window.setInterval(() => {
+            if (!streamingRef.current) return
+
+            if (typingQueue.current.length === 0) {
+                if (!isStreaming.current) {
+                    clearInterval(typingTimer.current!)
+                    typingTimer.current = null
+                }
+                return
+            }
+
+            if (streamingRef.current && typingQueue.current.length > 0) {
+                streamingRef.current.textContent =
+                    (streamingRef.current.textContent ?? "") +
+                    typingQueue.current.shift()!
+            }
+        }, 30)
+    }
 
     // 메시지 전송
     const sendMessage = async () => {
         // 1. 입력값 있는 지 체크
-        if (!input.trim()) {
+        if (!input.trim() || isStreaming.current) {
             return
         }
 
-        // 2. 사용자 메시지를 state에 추가
+        // 2. 사용자 메시지 + 빈 AI 메시지 추가
         setMessage((prev) => [
             ...prev, // 이전 데이터를 복사
             {role: "user", content: input}, // 사용자가 보낸 메시지
@@ -36,10 +65,6 @@ function ChatBot() {
 
         // AI가 보낸 데이터를 출력
         try {
-            // 1. 서버 연결 => fetch / axios
-            // 2. 데이터를 수신 루프
-            // 3. DOM 직접 업데이트 => HTML을 생성해서 추가
-            // 4. 스트리밍 종료 후 state 반영
             const response = await fetch(
                 "http://localhost:8080/chat/stream?message=" + encodeURIComponent(userMessage)
             )
@@ -47,23 +72,29 @@ function ChatBot() {
             const decoder = new TextDecoder("utf-8")
             let fullContent = ""
 
-            // 3. 스트리밍 수신 루프
+            // 스트리밍 수신 루프
             while (true) {
                 const { done, value } = await reader.read()
                 if (done) {
                     break
                 }
 
-                const chunk = decoder.decode(value)
-                fullContent += chunk.replaceAll("data:"," ")
+                const chunk = decoder.decode(value).replaceAll("data:", "")
+                fullContent += chunk
 
-                // 4. DOM 직접 업데이트 (리렌더 없음)
-                if (streamingRef.current) {
-                    streamingRef.current.textContent = fullContent
+                // 문자 단위 큐 적재
+                for (const ch of chunk) {
+                    typingQueue.current.push(ch)
                 }
+
+                // 타이핑 시작
+                startTyping()
             }
 
-            // 5. 스트리밍 종료 후 state 반영
+            // 스트리밍 종료
+            isStreaming.current = false
+
+            // state 반영
             setMessage((prev) => {
                 const updated = [...prev]
                 updated[updated.length - 1] = {
